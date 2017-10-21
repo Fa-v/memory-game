@@ -1,79 +1,61 @@
 /**
 * Variables
 */
-$full-width: 100%;
-$full-height: 100%;
-$font-stack: Helvetica, sans-serif;
-$title-color: purple;
-$title: 3em;
-$subtitle: 1.5em;
-
 /**
 * General styles
 */
 html {
   margin: 0;
   padding: 0;
-  width: $full-width;
-  height: auto;
-}
+  width: 100%;
+  height: auto; }
 
 .container {
   padding: 2em;
   display: flex;
   flex-direction: row;
-  font-family: $font-stack;
-}
+  font-family: Helvetica, sans-serif; }
 
 /**
 * Aside: title and game info
 */
 .controls {
   width: 40%;
-  margin-left: 20px;
-}
+  margin-left: 20px; }
 
 .stars {
   padding: 0;
-  list-style: none;
-}
+  list-style: none; }
 
 .stars > li {
-  display: inline-block;
-}
+  display: inline-block; }
 
 .fa-star {
-  color: yellow;
-}
+  color: yellow; }
 
 .reset-btn {
   font-size: 1em;
   padding: 1em;
   color: red;
   background-color: white;
-  border: 1px solid red;
-}
+  border: 1px solid red; }
 
 .reset-btn:hover {
   background-color: red;
-  color: white;
-}
+  color: white; }
 
 .reset-btn:focus {
-  outline: 0;
-}
+  outline: 0; }
 
 /**
 * Cards section
 */
 .deck {
-  width: 60%;
-}
+  width: 60%; }
 
 .row {
   display: flex;
-  justify-content: flex-end;
-}
+  justify-content: flex-end; }
 
 .wrapper {
   width: 150px;
@@ -82,18 +64,16 @@ html {
   perspective: 800px;
   margin-bottom: 20px;
   margin-right: 20px;
-  border-radius: 7px;
-}
+  border-radius: 7px; }
 
 .card {
-  width: $full-width;
-  height: $full-height;
+  width: 100%;
+  height: 100%;
   position: absolute;
   transform-style: preserve-3d;
   transition: transform 1s;
   text-align: center;
-  line-height: 150px;
-}
+  line-height: 150px; }
 
 /**
 * 3D animation
@@ -101,30 +81,24 @@ html {
 .card figure {
   margin: 0;
   position: absolute;
-  width: $full-width;
-  height: $full-height;
-  backface-visibility: hidden;
-}
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; }
 
 .card .front {
-  background: red;
-}
+  background: red; }
 
 .card .back {
   background: blue;
-  transform:rotateY(180deg);
-}
+  transform: rotateY(180deg); }
 
 .card:hover {
-  transform:rotateY(180deg);
-}
+  transform: rotateY(180deg); }
 
 .title {
   margin-top: 0;
-  color: $title-color;
-  font-size: $title;
-}
+  color: purple;
+  font-size: 3em; }
 
 .subtitle {
-  font-size: $subtitle;
-}
+  font-size: 1.5em; }
