@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var browserSync = require('browser-sync').create();
+var reload = browserSync.reload;
 
 /**
  * Compile scss files to css
@@ -9,7 +10,7 @@ gulp.task('styles', function () {
   gulp.src('./scss/main.scss')
     .pipe(sass())
     .pipe(gulp.dest('./css'))
-    .pipe(browserSync.reload({ stream: true }));
+    .pipe(reload({ stream: true }));
 });
 
 /**
@@ -26,10 +27,14 @@ gulp.task('serve', function () {
   });
 
   /**
-   *Watch for any changes in the files an reload the browser
+   *Watch for any changes in the scss files an reload the browser
    */
   gulp.watch('./scss/*.scss', ['styles']);
-  gulp.watch('./**/*.html').on('change', browserSync.reload);
+   /**
+   *Watch for any changes in the js file an reload the browser
+   */
+  gulp.watch('./**/*.js').on('change', reload);
+  gulp.watch('./**/*.html').on('change', reload);
 });
 
 gulp.task('default', ['styles', 'serve']);
