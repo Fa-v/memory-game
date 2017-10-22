@@ -44,3 +44,28 @@ function assignCards() {
     $(this).addClass(icons[index]);
   });
 }
+
+/**
+ * @description Add event listeners to cards to flip each one on click and call checkIfMatch
+ */
+let count = 0;
+let pairToCheck = [];
+$($cards).each(function (index) {
+  $(this).click(function () {
+    count += 1;
+    pairToCheck.push(icons[index]);
+    $(this).addClass('flip-card');
+    (count === 2) && checkIfMatch();
+    console.log(pairToCheck);
+  });
+});
+
+/**
+ * @description Check for a match in the icon classes, reset the counter and the pairToCheck array
+ */
+function checkIfMatch() {
+  let match = pairToCheck[0] === pairToCheck[1];
+  console.log(match);
+  count = 0;
+  pairToCheck = [];
+}

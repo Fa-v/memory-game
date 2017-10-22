@@ -92,7 +92,7 @@ html {
   background: blue;
   transform: rotateY(180deg); }
 
-.card:hover {
+.flip-card {
   transform: rotateY(180deg); }
 
 .title {
