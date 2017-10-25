@@ -79,9 +79,11 @@ $($cards).each(function (index, card) {
  *  and call thereIsAMatch and notAMatch functions
  */
 function checkIfMatch() {
-  let match = game.pairToCheck && (game.pairToCheck.iconName[0] === game.pairToCheck.iconName[1]);
-  match ? thereIsAMatch(match) : notAMatch(match);
+  let match = game.pairToCheck && (game.pairToCheck.iconName[0] === game.pairToCheck.iconName[1])
+  let differentCard = game.pairToCheck && (game.pairToCheck.cardId[0] !== game.pairToCheck.cardId[1]);
+  match && differentCard ? thereIsAMatch(match) : notAMatch(match);
 
+  movesCounter(differentCard);
   game.count = 0;
   game.pairToCheck = { iconName: [], cardId: [] };
 }
@@ -99,6 +101,9 @@ function thereIsAMatch(match) {
   $(cardOne).children('.back').addClass('green');
   $(cardTwo).children('.back').addClass('green');
 
+  /* cancel the click event if the cards are a match */
+  $($cards[cardIdOne]).off('click');
+  $( $cards[cardIdTwo]).off('click');
   game.matchedCards.push(cardIdOne, cardIdTwo);
 }
 
@@ -115,4 +120,14 @@ function notAMatch(match) {
     $(cardOne).removeClass('flip-card');
     $(cardTwo).removeClass('flip-card');
   }, 1000);
+}
+
+/**
+ * @description count augments by one when two cards have been clicked
+ */
+function movesCounter(differentCard) {
+  /* prevents to count clicks on the same card */
+  let numOfMoves = (differentCard ? game.moves += 1 : game.moves);
+  let movesText = (numOfMoves < 10) ? 'Moves: ' + '0' + numOfMoves : 'Moves: ' + numOfMoves;
+  $($moves).html(movesText);
 }
