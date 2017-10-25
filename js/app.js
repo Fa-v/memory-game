@@ -11,8 +11,18 @@ const $cards = $('.card');
 const $cardsIcons = $('.card .fa');
 const icons = ['fa-pied-piper', 'fa-pied-piper', 'fa-rebel', 'fa-rebel', 'fa-share-alt', 'fa-share-alt', 'fa-podcast', 'fa-podcast', 'fa-free-code-camp', 'fa-free-code-camp', 'fa-github-alt', 'fa-github-alt', 'fa-stack-overflow', 'fa-stack-overflow', 'fa-slack', 'fa-slack'];
 
+let game = {
+  count: 0,
+  moves: 0,
+  timer: 0,
+  match: false,
+  matchedCards: [],
+  pairToCheck: {iconName: [], cardId: []}
+}
+
 function init() {
   shuffle(icons);
+  clearTimeout(delayEffect);
 }
 
 /**
@@ -48,24 +58,61 @@ function assignCards() {
 /**
  * @description Add event listeners to cards to flip each one on click and call checkIfMatch
  */
-let count = 0;
-let pairToCheck = [];
-$($cards).each(function (index) {
+$($cards).each(function (index, card) {
   $(this).click(function () {
-    count += 1;
-    pairToCheck.push(icons[index]);
+    event.preventDefault();
+    let id = index;
+    let cardIcon = icons[index];
+
     $(this).addClass('flip-card');
-    (count === 2) && checkIfMatch();
-    console.log(pairToCheck);
+    game.count += 1;
+
+    game.pairToCheck.cardId.push(id);
+    game.pairToCheck.iconName.push(cardIcon);
+
+    (game.count === 2) && checkIfMatch();
   });
 });
 
 /**
  * @description Check for a match in the icon classes, reset the counter and the pairToCheck array
+ *  and call thereIsAMatch and notAMatch functions
  */
 function checkIfMatch() {
-  let match = pairToCheck[0] === pairToCheck[1];
-  console.log(match);
-  count = 0;
-  pairToCheck = [];
+  let match = game.pairToCheck && (game.pairToCheck.iconName[0] === game.pairToCheck.iconName[1]);
+  match ? thereIsAMatch(match) : notAMatch(match);
+
+  game.count = 0;
+  game.pairToCheck = { iconName: [], cardId: [] };
+}
+
+/**
+ * @description Apply effects to matched pair of cards
+ * @param {boolean} match
+ */
+function thereIsAMatch(match) {
+  let cardOne = $cards[game.pairToCheck.cardId[0]];
+  let cardTwo = $cards[game.pairToCheck.cardId[1]];
+  let cardIdOne = game.pairToCheck.cardId[0];
+  let cardIdTwo = game.pairToCheck.cardId[1];
+
+  $(cardOne).children('.back').addClass('green');
+  $(cardTwo).children('.back').addClass('green');
+
+  game.matchedCards.push(cardIdOne, cardIdTwo);
+}
+
+/**
+ * @description Apply effects to pair of cards that doesn't match
+ * @param {boolean} match
+ */
+let delayEffect;
+function notAMatch(match) {
+  let cardOne = $cards[game.pairToCheck.cardId[0]];
+  let cardTwo = $cards[game.pairToCheck.cardId[1]];
+
+  delayEffect = setTimeout(function () {
+    $(cardOne).removeClass('flip-card');
+    $(cardTwo).removeClass('flip-card');
+  }, 1000);
 }

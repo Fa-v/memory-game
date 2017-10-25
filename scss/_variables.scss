@@ -110,7 +110,7 @@ html {
   background: red;
 }
 
-.card .back {
+.back {
   background: blue;
   transform:rotateY(180deg);
 }
@@ -127,4 +127,12 @@ html {
 
 .subtitle {
   font-size: $subtitle;
+}
+
+.green {
+  background: green;
+}
+
+.red {
+  background: red;
 }
