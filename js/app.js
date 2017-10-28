@@ -12,6 +12,7 @@ const $cardsIcons = $('.card .fa');
 const icons = ['fa-pied-piper', 'fa-pied-piper', 'fa-rebel', 'fa-rebel', 'fa-share-alt', 'fa-share-alt', 'fa-podcast', 'fa-podcast', 'fa-free-code-camp', 'fa-free-code-camp', 'fa-github-alt', 'fa-github-alt', 'fa-stack-overflow', 'fa-stack-overflow', 'fa-slack', 'fa-slack'];
 
 let game = {
+  clicks: 0,
   count: 0,
   moves: 0,
   timer: 0,
@@ -23,6 +24,7 @@ let game = {
 function init() {
   shuffle(icons);
   clearTimeout(delayEffect);
+  clearInterval(gameDuration);
 }
 
 /**
@@ -56,7 +58,7 @@ function assignCards() {
 }
 
 /**
- * @description Add event listeners to cards to flip each one on click and call checkIfMatch
+ * @description Add event listeners to cards to flip each one on click, call checkIfMatch and start timer
  */
 $($cards).each(function (index, card) {
   $(this).click(function () {
@@ -64,8 +66,11 @@ $($cards).each(function (index, card) {
     let id = index;
     let cardIcon = icons[index];
 
-    $(this).addClass('flip-card');
     game.count += 1;
+    game.clicks += 1;
+    game.clicks === 1 && startTimer();
+
+    $(this).addClass('flip-card');
 
     game.pairToCheck.cardId.push(id);
     game.pairToCheck.iconName.push(cardIcon);
@@ -128,6 +133,25 @@ function notAMatch(match) {
 function movesCounter(differentCard) {
   /* prevents to count clicks on the same card */
   let numOfMoves = (differentCard ? game.moves += 1 : game.moves);
-  let movesText = (numOfMoves < 10) ? 'Moves: ' + '0' + numOfMoves : 'Moves: ' + numOfMoves;
+  let movesText = (numOfMoves < 10) ? `Moves: 0${numOfMoves}` : `Moves: ${numOfMoves}`;
   $($moves).html(movesText);
+}
+
+/**
+ * TODO create a function timer that starts when the user click the first card and ends when all the
+ * cards have been matched.
+ */
+function gameDuration() {
+  let gameTimer = game.timer += 1;
+  let seconds = (gameTimer >= 60) ? (gameTimer % 60) : gameTimer;
+  let minutes = Math.floor(gameTimer / 60);
+  let displaySeconds = seconds < 10 ? '0' + seconds : seconds;
+  let displayMinutes = minutes < 10 ? ('0' + minutes) : minutes
+  let displayTime = `Timer: ${displayMinutes}:${displaySeconds}`;
+
+  $($timer).html(displayTime);
+}
+
+function startTimer() {
+  setInterval(gameDuration, 1000);
 }
