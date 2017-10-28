@@ -138,7 +138,7 @@ function movesCounter(differentCard) {
 }
 
 /**
- * TODO create a function timer that starts when the user click the first card and ends when all the
+ * @description timer starts when the user click the first card and ends when all the
  * cards have been matched.
  */
 function gameDuration() {
