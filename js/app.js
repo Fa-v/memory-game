@@ -16,6 +16,7 @@ let game = {
   count: 0,
   moves: 0,
   timer: 0,
+  stars: 3,
   match: false,
   matchedCards: [],
   pairToCheck: {iconName: [], cardId: []}
@@ -69,7 +70,7 @@ $($cards).each(function (index, card) {
     game.count += 1;
     game.clicks += 1;
     game.clicks === 1 && startTimer();
-
+    game.clicks && countStars();
     $(this).addClass('flip-card');
 
     game.pairToCheck.cardId.push(id);
@@ -154,4 +155,13 @@ function gameDuration() {
 
 function startTimer() {
   setInterval(gameDuration, 1000);
+}
+
+/**
+ * @description count stars depending on number of clicks
+ */
+function countStars() {
+  let minusOne = (game.clicks === 16) ? $($stars[2]).css('color', 'grey') && (game.stars -= 1) : $stars[2];
+  let minusTwo = (game.clicks === 32) ? $($stars[1]).css('color', 'grey') && (game.stars -= 2) : $stars[1];
+  let minusThree = (game.clicks > 40) ? $($stars[0]).css('color', 'grey') && (game.stars = 0) : $stars[0];
 }
