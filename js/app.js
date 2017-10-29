@@ -6,10 +6,11 @@ $(document).ready(init);
 const $stars = $('.fa-star');
 const $moves = $('.moves');
 const $timer = $('.timer');
-const $resetButton = $('.reset-btn');
+const $resetGame = $('.reset-game');
 const $cards = $('.card');
 const $cardsIcons = $('.card .fa');
 const icons = ['fa-pied-piper', 'fa-pied-piper', 'fa-rebel', 'fa-rebel', 'fa-share-alt', 'fa-share-alt', 'fa-podcast', 'fa-podcast', 'fa-free-code-camp', 'fa-free-code-camp', 'fa-github-alt', 'fa-github-alt', 'fa-stack-overflow', 'fa-stack-overflow', 'fa-slack', 'fa-slack'];
+let starCounting;
 
 let game = {
   clicks: 0,
@@ -17,15 +18,25 @@ let game = {
   moves: 0,
   timer: 0,
   stars: 3,
-  match: false,
   matchedCards: [],
-  pairToCheck: {iconName: [], cardId: []}
+  pairToCheck: { iconName: [], cardId: [] },
+  displaySeconds: '',
+  displayMinutes: ''
 }
 
+/**
+ * @description Set initial display when the app is loaded
+ *
+ */
 function init() {
   shuffle(icons);
+
+  /* initial display */
+  $($moves).html('Moves: 00');
+  $($timer).html('Time: 00:00');
+  $('.fa-star').css('color', 'yellow')
   clearTimeout(delayEffect);
-  clearInterval(gameDuration);
+  clearInterval(starCounting);
 }
 
 /**
@@ -108,8 +119,8 @@ function thereIsAMatch(match) {
   $(cardTwo).children('.back').addClass('green');
 
   /* cancel the click event if the cards are a match */
-  $($cards[cardIdOne]).off('click');
-  $( $cards[cardIdTwo]).off('click');
+  /* $($cards[cardIdOne]).off('click');
+  $( $cards[cardIdTwo]).off('click'); */
   game.matchedCards.push(cardIdOne, cardIdTwo);
 }
 
@@ -136,6 +147,7 @@ function movesCounter(differentCard) {
   let numOfMoves = (differentCard ? game.moves += 1 : game.moves);
   let movesText = (numOfMoves < 10) ? `Moves: 0${numOfMoves}` : `Moves: ${numOfMoves}`;
   $($moves).html(movesText);
+  calculateWinner();
 }
 
 /**
@@ -146,15 +158,15 @@ function gameDuration() {
   let gameTimer = game.timer += 1;
   let seconds = (gameTimer >= 60) ? (gameTimer % 60) : gameTimer;
   let minutes = Math.floor(gameTimer / 60);
-  let displaySeconds = seconds < 10 ? '0' + seconds : seconds;
-  let displayMinutes = minutes < 10 ? ('0' + minutes) : minutes
-  let displayTime = `Timer: ${displayMinutes}:${displaySeconds}`;
+  game.displaySeconds = seconds < 10 ? '0' + seconds : seconds;
+  game.displayMinutes = minutes < 10 ? ('0' + minutes) : minutes
+  let displayTime = `Timer: ${game.displayMinutes}:${game.displaySeconds}`;
 
   $($timer).html(displayTime);
 }
 
 function startTimer() {
-  setInterval(gameDuration, 1000);
+  starCounting = setInterval(gameDuration, 1000);
 }
 
 /**
@@ -162,6 +174,46 @@ function startTimer() {
  */
 function countStars() {
   let minusOne = (game.clicks === 16) ? $($stars[2]).css('color', 'grey') && (game.stars -= 1) : $stars[2];
-  let minusTwo = (game.clicks === 32) ? $($stars[1]).css('color', 'grey') && (game.stars -= 2) : $stars[1];
-  let minusThree = (game.clicks > 40) ? $($stars[0]).css('color', 'grey') && (game.stars = 0) : $stars[0];
+  let minusTwo = (game.clicks === 32) ? $($stars[1]).css('color', 'grey') && (game.stars -= 1) : $stars[1];
+  let minusThree = (game.clicks === 40) ? $($stars[0]).css('color', 'grey') && (game.stars -= 1) : $stars[0];
 }
+
+/**
+ * @description check for 16 ids in matchedCards array if true, show modal
+ */
+function calculateWinner() {
+  let scoreText = `Score: ${game.moves} Moves  ${game.stars} Stars  ${game.displayMinutes}:${game.displaySeconds} Seconds`
+
+  $('.game-score').html(scoreText);
+  (game.matchedCards.length === 16) && clearInterval(starCounting);
+  (game.matchedCards.length === 16) && $('.modal').show();
+}
+
+/**
+ * @description Reset all values
+ */
+$($resetGame).click(function () {
+  game = {
+    clicks: 0,
+    count: 0,
+    moves: 0,
+    timer: 0,
+    stars: 3,
+    match: false,
+    matchedCards: [],
+    pairToCheck: { iconName: [], cardId: [] },
+    displaySeconds: '',
+    displayMinutes: ''
+  };
+
+  /* Remove all classes assigned during the game */
+  $('*').removeClass('flip-card');
+  $('*').removeClass('green');
+  $('.modal').css('display', 'none');
+
+  $($cardsIcons).each(function (index) {
+    $(this).removeClass(icons[index]);
+  });
+
+  init();
+});
