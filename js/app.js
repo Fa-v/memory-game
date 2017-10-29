@@ -34,9 +34,11 @@ function init() {
   /* initial display */
   $($moves).html('Moves: 00');
   $($timer).html('Time: 00:00');
-  $('.fa-star').css('color', 'yellow')
+  $('.fa-star').css('color', 'yellow');
   clearTimeout(delayEffect);
   clearInterval(starCounting);
+
+  addClickToCards();
 }
 
 /**
@@ -72,24 +74,26 @@ function assignCards() {
 /**
  * @description Add event listeners to cards to flip each one on click, call checkIfMatch and start timer
  */
-$($cards).each(function (index, card) {
-  $(this).click(function () {
-    event.preventDefault();
-    let id = index;
-    let cardIcon = icons[index];
+function addClickToCards() {
+  $($cards).each(function (index, card) {
+    $(this).click(function () {
+      event.preventDefault();
+      let id = index;
+      let cardIcon = icons[index];
 
-    game.count += 1;
-    game.clicks += 1;
-    game.clicks === 1 && startTimer();
-    game.clicks && countStars();
-    $(this).addClass('flip-card');
+      game.count += 1;
+      game.clicks += 1;
+      game.clicks === 1 && startTimer();
+      game.clicks && countStars();
+      $(this).addClass('flip-card');
 
-    game.pairToCheck.cardId.push(id);
-    game.pairToCheck.iconName.push(cardIcon);
+      game.pairToCheck.cardId.push(id);
+      game.pairToCheck.iconName.push(cardIcon);
 
-    (game.count === 2) && checkIfMatch();
+      (game.count === 2) && checkIfMatch();
+    });
   });
-});
+}
 
 /**
  * @description Check for a match in the icon classes, reset the counter and the pairToCheck array
@@ -119,8 +123,8 @@ function thereIsAMatch(match) {
   $(cardTwo).children('.back').addClass('green');
 
   /* cancel the click event if the cards are a match */
-  /* $($cards[cardIdOne]).off('click');
-  $( $cards[cardIdTwo]).off('click'); */
+  $($cards[cardIdOne]).off('click');
+  $($cards[cardIdTwo]).off('click');
   game.matchedCards.push(cardIdOne, cardIdTwo);
 }
 
@@ -199,7 +203,6 @@ $($resetGame).click(function () {
     moves: 0,
     timer: 0,
     stars: 3,
-    match: false,
     matchedCards: [],
     pairToCheck: { iconName: [], cardId: [] },
     displaySeconds: '',
