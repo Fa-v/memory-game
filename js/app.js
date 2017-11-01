@@ -177,18 +177,23 @@ function startTimer() {
  * @description count stars depending on number of clicks
  */
 function countStars() {
-  let minusOne = (game.clicks === 16) ? $($stars[2]).css('color', 'grey') && (game.stars -= 1) : $stars[2];
-  let minusTwo = (game.clicks === 32) ? $($stars[1]).css('color', 'grey') && (game.stars -= 1) : $stars[1];
-  let minusThree = (game.clicks === 40) ? $($stars[0]).css('color', 'grey') && (game.stars -= 1) : $stars[0];
+  let minusOne = (game.clicks === 16) ? $($stars[2]).css('color', '#ecf0f1') && (game.stars -= 1) : $stars[2];
+  let minusTwo = (game.clicks === 32) ? $($stars[1]).css('color', '#ecf0f1') && (game.stars -= 1) : $stars[1];
+  let minusThree = (game.clicks === 40) ? $($stars[0]).css('color', '#ecf0f1') && (game.stars -= 1) : $stars[0];
 }
 
 /**
  * @description check for 16 ids in matchedCards array if true, show modal
  */
 function calculateWinner() {
-  let scoreText = `Score: ${game.moves} Moves  ${game.stars} Stars  ${game.displayMinutes}:${game.displaySeconds} Seconds`
+  let movesScore = ` Moves: ${game.moves}`;
+  let starsScore = (game.stars === 1) ? ` Star: ${game.stars}` : ` Stars: ${game.stars}`;
+  let timeScore = `Time: ${game.displayMinutes}:${game.displaySeconds}`;
 
-  $('.game-score').html(scoreText);
+  $('.movesScore').html(movesScore);
+  $('.starsScore').html(starsScore);
+  $('.timeScore').html(timeScore);
+
   (game.matchedCards.length === 16) && clearInterval(starCounting);
   (game.matchedCards.length === 16) && $('.modal').show();
 }

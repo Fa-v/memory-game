@@ -1,27 +1,92 @@
 /**
 * Variables
 */
+/* Container width */
+/* Font family and font sizes*/
+/* Colors */
+/* Small tablets and large smartphones (landscape view) */
+/* Small tablets (portrait view) */
+/* Tablets and small desktops */
+/* Small devices */
+/* Medium devices */
+/* Large devices */
+/* @mixin lg {
+  @media (min-width: 1024px) {
+      @content;
+  }
+} */
 /**
 * General styles
 */
+/* set a box model on the root element */
 html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: auto; }
+  box-sizing: border-box; }
 
+/* All the elements from the DOM inherit box-sizing from the parent */
+*,
+*::before,
+*::after {
+  box-sizing: inherit; }
+
+/**
+* 1. make the container full width width with a max of 1200px
+* 2. center contents in the view port
+* 3. leave some space on the edges
+*/
 .container {
-  padding: 2em;
+  margin-left: auto;
+  /* 2 */
+  margin-right: auto;
+  /* 2 */
+  padding: 20px;
+  /* 3 */
+  width: 100%;
+  /* 1 */
+  max-width: 1200px;
+  /* 1 */
   display: flex;
   flex-direction: row;
   font-family: Helvetica, sans-serif; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .container {
+      flex-flow: row wrap; } }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .container {
+      flex-flow: row wrap;
+      /* padding-top: 5em; */ } }
 
 /**
 * Aside: title and game info
 */
 .controls {
-  width: 40%;
-  margin-left: 20px; }
+  width: 40%; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .controls {
+      width: 100%;
+      text-align: center;
+      line-height: 0.5em;
+      margin-bottom: 1em; } }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .controls {
+      width: 100%;
+      text-align: center;
+      line-height: 0.5em;
+      margin-bottom: 1em; } }
+
+.title {
+  margin-top: 0;
+  color: #34495e;
+  font-size: 3em; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .title {
+      font-size: 1.5em; } }
+
+.subtitle {
+  font-size: 1.5em;
+  color: #34495e; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .subtitle {
+      font-size: 1em; } }
 
 .stars {
   padding: 0;
@@ -31,18 +96,22 @@ html {
   display: inline-block; }
 
 .fa-star {
-  color: yellow; }
+  color: #f1c40f; }
+
+@media (min-width: 320px) and (max-width: 767px) {
+  .stars .fa {
+    font-size: 1.5em; } }
 
 .reset-btn {
   font-size: 1em;
   padding: 1em;
-  color: red;
-  background-color: white;
-  border: 1px solid red; }
+  color: #c0392b;
+  background-color: #ecf0f1;
+  border: 1px solid #c0392b; }
 
 .reset-btn:hover {
-  background-color: red;
-  color: white; }
+  background-color: #c0392b;
+  color: #ecf0f1; }
 
 .reset-btn:focus {
   outline: 0; }
@@ -51,11 +120,17 @@ html {
 * Cards section
 */
 .deck {
-  width: 60%; }
+  width: 70%; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .deck {
+      width: 100%; } }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .deck {
+      width: 100%; } }
 
 .row {
   display: flex;
-  justify-content: flex-end; }
+  justify-content: center; }
 
 .wrapper {
   width: 150px;
@@ -63,8 +138,13 @@ html {
   position: relative;
   perspective: 800px;
   margin-bottom: 20px;
-  margin-right: 20px;
-  border-radius: 7px; }
+  margin-right: 20px; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .wrapper {
+      width: 75px;
+      height: 75px;
+      margin-bottom: 5px;
+      margin-right: 5px; } }
 
 .card {
   width: 100%;
@@ -73,7 +153,13 @@ html {
   transform-style: preserve-3d;
   transition: transform 1s;
   text-align: center;
-  line-height: 150px; }
+  line-height: 180px; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .card {
+      line-height: 85px; } }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .card {
+      line-height: 170px; } }
 
 /**
 * 3D animation
@@ -83,31 +169,30 @@ html {
   position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden; }
+  backface-visibility: hidden;
+  border-radius: 7px; }
 
 .card .front {
-  background: red; }
+  background: #34495e; }
 
 .back {
-  background: blue;
+  background: #2980b9;
   transform: rotateY(180deg); }
+
+.back .fa {
+  color: #ecf0f1; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .back .fa {
+      font-size: 2em; } }
 
 .flip-card {
   transform: rotateY(180deg); }
 
-.title {
-  margin-top: 0;
-  color: purple;
-  font-size: 3em; }
-
-.subtitle {
-  font-size: 1.5em; }
-
 .green {
-  background: green; }
+  background: #27ae60; }
 
 .red {
-  background: red; }
+  background: #c0392b; }
 
 /**
 * Modal
@@ -130,28 +215,42 @@ html {
   width: 50%;
   max-height: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
+  background-color: #34495e;
   text-align: center;
-  line-height: 1.5em; }
+  line-height: 1.5em;
+  color: #ecf0f1;
+  border-radius: 7px; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .modal-content {
+      width: 70%;
+      max-height: 70%;
+      transform: translate(-50%, -50%); } }
 
 .modal-title {
-  font-size: 3em;
-  color: purple; }
+  font-size: 1.5em;
+  color: #ecf0f1;
+  line-height: 1.5em; }
+
+ul {
+  margin: 0;
+  padding: 0; }
 
 .game-score li {
-  list-style: none; }
+  list-style: none;
+  font-size: 1em;
+  line-height: 1.5em; }
 
 .play-again {
   font-size: 1em;
-  padding: 0.5em;
-  margin-bottom: 1em;
-  background-color: green;
-  color: white;
-  border: 1px solid green; }
+  padding: 0.9em;
+  margin: 1.24em 0;
+  background-color: #2980b9;
+  color: #ecf0f1;
+  border: 1px solid #2980b9; }
 
 .play-again:hover {
-  color: green;
-  background-color: white; }
+  color: #2980b9;
+  background-color: #ecf0f1; }
 
 .play-again:focus {
   outline: 0; }

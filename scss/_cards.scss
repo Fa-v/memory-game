@@ -1,0 +1,93 @@
+/**
+* Cards section
+*/
+.deck {
+  width: 70%;
+
+  @include small {
+    width: 100%;
+  }
+
+  @include medium {
+    width: 100%;
+  }
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  perspective: 800px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+
+  @include small {
+    width: 75px;
+    height: 75px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+  }
+}
+
+.card {
+  width: $full-width;
+  height: $full-height;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+  text-align: center;
+  line-height: 180px;
+
+  @include small {
+    line-height: 85px;
+  }
+
+  @include medium {
+    line-height: 170px;
+  }
+}
+
+/**
+* 3D animation
+*/
+.card figure {
+  margin: 0;
+  position: absolute;
+  width: $full-width;
+  height: $full-height;
+  backface-visibility: hidden;
+  border-radius: 7px;
+}
+
+.card .front {
+  background: $dark-grey;
+}
+
+.back {
+  background: $blue;
+  transform:rotateY(180deg);
+}
+
+.back .fa {
+  color: $light-grey;
+  @include small {
+    font-size: 2em;
+  }
+}
+
+.flip-card {
+  transform:rotateY(180deg);
+}
+
+.green {
+  background: $green;
+}
+
+.red {
+  background: $red;
+}

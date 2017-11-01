@@ -1,0 +1,74 @@
+/**
+* Aside: title and game info
+*/
+.controls {
+  width: 40%;
+
+  @include small {
+    width: 100%;
+    text-align: center;
+    line-height: 0.5em;
+    margin-bottom: 1em;
+  }
+
+  @include medium {
+    width: 100%;
+    text-align: center;
+    line-height: 0.5em;
+    margin-bottom: 1em;
+  }
+}
+
+.title {
+  margin-top: 0;
+  color: $dark-grey;
+  font-size: $title;
+
+  @include small {
+    font-size: $subtitle;
+  }
+}
+
+.subtitle {
+  font-size: $subtitle;
+  color: $dark-grey;
+  @include small {
+    font-size: $text;
+  }
+}
+
+.stars {
+  padding: 0;
+  list-style: none;
+}
+
+.stars > li {
+  display: inline-block;
+}
+
+.fa-star {
+  color: $yellow;
+}
+
+.stars .fa {
+  @include small {
+    font-size: $subtitle;
+  }
+}
+
+.reset-btn {
+  font-size: 1em;
+  padding: 1em;
+  color: $red;
+  background-color: $light-grey;
+  border: 1px solid $red;
+}
+
+.reset-btn:hover {
+  background-color: $red;
+  color: $light-grey;
+}
+
+.reset-btn:focus {
+  outline: 0;
+}

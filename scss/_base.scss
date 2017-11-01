@@ -1,0 +1,39 @@
+/**
+* General styles
+*/
+
+/* set a box model on the root element */
+html {
+  box-sizing: border-box;
+}
+
+/* All the elements from the DOM inherit box-sizing from the parent */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/**
+* 1. make the container full width width with a max of 1200px
+* 2. center contents in the view port
+* 3. leave some space on the edges
+*/
+.container {
+  margin-left: auto; /* 2 */
+  margin-right: auto; /* 2 */
+  padding: 20px; /* 3 */
+  width: $full-width; /* 1 */
+  max-width: $max-width; /* 1 */
+  display: flex;
+  flex-direction: row;
+  font-family: $font-stack;
+
+  @include small {
+    flex-flow: row wrap;
+  }
+
+  @include medium {
+    flex-flow: row wrap;
+  }
+}

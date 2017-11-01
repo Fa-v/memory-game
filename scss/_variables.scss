@@ -1,192 +1,32 @@
 /**
 * Variables
 */
+
+/* Container width */
 $full-width: 100%;
 $full-height: 100%;
+$max-width: 1200px;
+
+/* Font family and font sizes*/
 $font-stack: Helvetica, sans-serif;
-$title-color: purple;
 $title: 3em;
 $subtitle: 1.5em;
+$text: 1em;
 
-/**
-* General styles
-*/
-html {
-  margin: 0;
-  padding: 0;
-  width: $full-width;
-  height: auto;
-}
+/* Colors */
+$dark-grey: #34495e;
+$blue: #2980b9;
+$green: #27ae60;
+$red: #c0392b;
+$yellow: #f1c40f;
+$light-grey: #ecf0f1;
 
-.container {
-  padding: 2em;
-  display: flex;
-  flex-direction: row;
-  font-family: $font-stack;
-}
+/* Breakpoints */
+/* Small tablets and large smartphones (landscape view) */
+$screen-sm-min: 320px;
 
-/**
-* Aside: title and game info
-*/
-.controls {
-  width: 40%;
-  margin-left: 20px;
-}
+/* Small tablets (portrait view) */
+$screen-md-min: 768px;
 
-.stars {
-  padding: 0;
-  list-style: none;
-}
-
-.stars > li {
-  display: inline-block;
-}
-
-.fa-star {
-  color: yellow;
-}
-
-.reset-btn {
-  font-size: 1em;
-  padding: 1em;
-  color: red;
-  background-color: white;
-  border: 1px solid red;
-}
-
-.reset-btn:hover {
-  background-color: red;
-  color: white;
-}
-
-.reset-btn:focus {
-  outline: 0;
-}
-
-/**
-* Cards section
-*/
-.deck {
-  width: 60%;
-}
-
-.row {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.wrapper {
-  width: 150px;
-  height: 150px;
-  position: relative;
-  perspective: 800px;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  border-radius: 7px;
-}
-
-.card {
-  width: $full-width;
-  height: $full-height;
-  position: absolute;
-  transform-style: preserve-3d;
-  transition: transform 1s;
-  text-align: center;
-  line-height: 150px;
-}
-
-/**
-* 3D animation
-*/
-.card figure {
-  margin: 0;
-  position: absolute;
-  width: $full-width;
-  height: $full-height;
-  backface-visibility: hidden;
-}
-
-.card .front {
-  background: red;
-}
-
-.back {
-  background: blue;
-  transform:rotateY(180deg);
-}
-
-.flip-card {
-  transform:rotateY(180deg);
-}
-
-.title {
-  margin-top: 0;
-  color: $title-color;
-  font-size: $title;
-}
-
-.subtitle {
-  font-size: $subtitle;
-}
-
-.green {
-  background: green;
-}
-
-.red {
-  background: red;
-}
-
-/**
-* Modal
-*/
-.modal {
-  display: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0,0,0,0.4);
-  z-index: 1;
-}
-
-.modal-content {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  padding: 1em;
-  width: 50%;
-  max-height: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  text-align: center;
-  line-height: $subtitle;
-}
-
-.modal-title {
-  font-size: $title;
-  color: $title-color;
-}
-
-.game-score li{
-  list-style: none;
-}
-
-.play-again {
-  font-size: 1em;
-  padding: 0.5em;
-  margin-bottom: 1em;
-  background-color: green;
-  color: white;
-  border: 1px solid green;
-}
-
-.play-again:hover {
-  color: green;
-  background-color: white;
-}
-
-.play-again:focus {
-  outline: 0;
-}
+/* Tablets and small desktops */
+$screen-lg-min: 1024px;
