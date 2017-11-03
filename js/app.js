@@ -269,14 +269,14 @@ function calculateWinner() {
   $('.starsScore').html(starsScore);
   $('.timeScore').html(timeScore);
 
-  (game.matchedCards.length === 16) && modalShow() &&
-    clearInterval(startCounting);
+  (game.matchedCards.length === 16) && modalShow();
 }
 
 /**
  * @description Shows modal when all cards are matched
  */
 function modalShow() {
+  clearInterval(startCounting);
   showModal = setTimeout(function () {
     $('.modal').show();
   }, 1200);
