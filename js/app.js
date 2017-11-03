@@ -11,6 +11,7 @@ const $cards = $('.card');
 const $cardsIcons = $('.card .fa');
 const icons = ['fa-pied-piper', 'fa-pied-piper', 'fa-rebel', 'fa-rebel', 'fa-share-alt', 'fa-share-alt', 'fa-podcast', 'fa-podcast', 'fa-free-code-camp', 'fa-free-code-camp', 'fa-github-alt', 'fa-github-alt', 'fa-stack-overflow', 'fa-stack-overflow', 'fa-slack', 'fa-slack'];
 let starCounting;
+let showModal;
 
 let game = {
   clicks: 0,
@@ -34,10 +35,9 @@ function init() {
   /* initial display */
   $($moves).html('Moves: 00');
   $($timer).html('Time: 00:00');
-  $('.fa-star').css('color', 'yellow');
-  clearTimeout(delayEffect);
+  $('.fa-star').css('color', '#f1c40f');
   clearInterval(starCounting);
-
+  clearTimeout(showModal);
   addClickToCards();
 }
 
@@ -76,7 +76,7 @@ function assignCards() {
  */
 function addClickToCards() {
   $($cards).each(function (index, card) {
-    $(this).click(function () {
+    $(this).click(function (event) {
       event.preventDefault();
       let id = index;
       let cardIcon = icons[index];
@@ -119,8 +119,8 @@ function thereIsAMatch(match) {
   let cardIdOne = game.pairToCheck.cardId[0];
   let cardIdTwo = game.pairToCheck.cardId[1];
 
-  $(cardOne).children('.back').addClass('green');
-  $(cardTwo).children('.back').addClass('green');
+    $(cardOne).children('.back').addClass('green', 1000).effect('bounce', {times: 3}, 500);
+    $(cardTwo).children('.back').addClass('green', 1000).effect('bounce', {times: 3}, 500);
 
   /* cancel the click event if the cards are a match */
   $($cards[cardIdOne]).off('click');
@@ -132,15 +132,18 @@ function thereIsAMatch(match) {
  * @description Apply effects to pair of cards that doesn't match
  * @param {boolean} match
  */
-let delayEffect;
 function notAMatch(match) {
   let cardOne = $cards[game.pairToCheck.cardId[0]];
   let cardTwo = $cards[game.pairToCheck.cardId[1]];
 
-  delayEffect = setTimeout(function () {
+  $(cardOne).children('.back').addClass('red', 1000).effect('shake', {times: 3}, 500, function() {
     $(cardOne).removeClass('flip-card');
+    $(cardOne).children('.back').removeClass('red', 500);
+  });
+  $(cardTwo).children('.back').addClass('red', 1000).effect('shake', {times: 3}, 500, function() {
     $(cardTwo).removeClass('flip-card');
-  }, 1000);
+    $(cardTwo).children('.back').removeClass('red', 500);
+  });
 }
 
 /**
@@ -194,8 +197,10 @@ function calculateWinner() {
   $('.starsScore').html(starsScore);
   $('.timeScore').html(timeScore);
 
-  (game.matchedCards.length === 16) && clearInterval(starCounting);
-  (game.matchedCards.length === 16) && $('.modal').show();
+    (game.matchedCards.length === 16) && clearInterval(starCounting);
+    (game.matchedCards.length === 16) && (showModal = setTimeout(function () {
+      $('.modal').show();
+    }, 1200));
 }
 
 /**
