@@ -29,7 +29,7 @@ const icons = [
 ];
 let startCounting;
 let showModal;
-
+let gameHistory;
 let game = getInitialGameState();
 
 /**
@@ -51,20 +51,22 @@ function getInitialGameState() {
 
 /**
  * @description Shuffles cards, sets initial display when the app is loaded,
- * clears all intervals and timeouts and adds click handlers to cards
+ * clears all intervals and timeouts, adds click handlers to cards and gets
+ * localStorage
  */
 function init() {
   shuffle(icons);
 
-  $($moves).html('Moves: 00');
-  $($timer).html('Time: 00:00');
+  $moves.text('Moves: 00');
+  $timer.text('Time: 00:00');
 
-  $('.fa-star').css('color', '#f1c40f');
+  $stars.css('color', '#f1c40f');
 
   clearInterval(startCounting);
   clearTimeout(showModal);
 
   addClickToCards();
+  gameHistory = JSON.parse(localStorage.getItem('record')) || {};
 }
 
 /**
@@ -147,7 +149,7 @@ function movesCounter(differentCard) {
     ? `Moves: 0${numOfMoves}`
     : `Moves: ${numOfMoves}`;
 
-  $moves.html(movesText);
+  $moves.text(movesText);
   calculateWinner();
 }
 
@@ -230,7 +232,7 @@ function gameDuration() {
   game.displayMinutes = minutes < 10 ? ('0' + minutes) : minutes
   displayTime = `Timer: ${game.displayMinutes}:${game.displaySeconds}`;
 
-  $timer.html(displayTime);
+  $timer.text(displayTime);
 }
 
 /**
@@ -257,6 +259,7 @@ function countStars() {
 
 /**
  * @description Checks for 16 ids in matchedCards array if true, show modal
+ * and calls setGameHistory to set game's record on localStorage
  */
 function calculateWinner() {
   let movesScore = `Moves: ${game.moves}`;
@@ -264,20 +267,31 @@ function calculateWinner() {
     ? `Star: ${game.stars}`
     : `Stars: ${game.stars}`;
   let timeScore = `Time: ${game.displayMinutes}:${game.displaySeconds}`;
+  let record = {lastGame: [timeScore, movesScore, starsScore]};
 
-  $('.movesScore').html(movesScore);
-  $('.starsScore').html(starsScore);
-  $('.timeScore').html(timeScore);
+  $('.movesScore').text(movesScore);
+  $('.starsScore').text(starsScore);
+  $('.timeScore').text(timeScore);
 
   (game.matchedCards.length === 16) && modalShow();
+
+  setGameHistory(record);
+}
+
+function setGameHistory(record) {
+  localStorage.setItem('record', JSON.stringify(record));
 }
 
 /**
- * @description Shows modal when all cards are matched
+ * @description Shows modal when all cards are matched and the last game record
+ * if there's any
  */
 function modalShow() {
   clearInterval(startCounting);
+  let lastGame = `Last time you played: ${gameHistory.lastGame}`
+
   showModal = setTimeout(function () {
+    gameHistory.lastGame && $('#gameHistory').text(lastGame);
     $('.modal').show();
   }, 1200);
 }
