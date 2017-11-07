@@ -17,7 +17,7 @@ If you want to run the code on your computer, you'll need to make sure you have 
 Also you'll need Sass, if you've already installed it, you can follow the steps below to run the code, otherwise consult the documentation on [how to install Sass](http://sass-lang.com/install).
 
 ```
-git clone <branch url>
+git clone https://github.com/Fa-v/memory-game.git
 cd memory-game/
 npm install --save // to install browser-sync, gulp and gulp-sass
 gulp
