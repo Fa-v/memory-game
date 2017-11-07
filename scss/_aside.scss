@@ -57,16 +57,17 @@
 }
 
 .reset-btn {
-  font-size: 1em;
-  padding: 1em;
+  font-size: $text;
+  padding: 0.9em;
   color: $red;
-  background-color: $light-grey;
+  background-color: white;
   border: 1px solid $red;
+  border-radius: 7px;
 }
 
 .reset-btn:hover {
   background-color: $red;
-  color: $light-grey;
+  color: white;
 }
 
 .reset-btn:focus {

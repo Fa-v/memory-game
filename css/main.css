@@ -98,14 +98,15 @@ html {
 
 .reset-btn {
   font-size: 1em;
-  padding: 1em;
+  padding: 0.9em;
   color: #c0392b;
-  background-color: #ecf0f1;
-  border: 1px solid #c0392b; }
+  background-color: white;
+  border: 1px solid #c0392b;
+  border-radius: 7px; }
 
 .reset-btn:hover {
   background-color: #c0392b;
-  color: #ecf0f1; }
+  color: white; }
 
 .reset-btn:focus {
   outline: 0; }
@@ -250,7 +251,8 @@ ul {
   margin: 1.24em 0;
   background-color: #2980b9;
   color: #ecf0f1;
-  border: 1px solid #2980b9; }
+  border: 1px solid #2980b9;
+  border-radius: 7px; }
 
 .play-again:hover {
   color: #2980b9;

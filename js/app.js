@@ -1,7 +1,7 @@
 $(document).ready(init);
 
 /**
- * DOM elements
+ * DOM element selectors
  */
 const $stars = $('.fa-star');
 const $moves = $('.moves');
@@ -9,7 +9,8 @@ const $timer = $('.timer');
 const $resetGame = $('.reset-game');
 const $cards = $('.card');
 const $cardsIcons = $('.card .fa');
-const icons = [
+
+let icons = [
   'fa-pied-piper',
   'fa-pied-piper',
   'fa-rebel',
@@ -35,7 +36,7 @@ let game = getInitialGameState();
 /**
  * @description Returns the initial state object
  */
-function getInitialGameState() {
+function getInitialGameState () {
   return {
     clicks: 0,
     count: 0,
@@ -51,10 +52,9 @@ function getInitialGameState() {
 
 /**
  * @description Shuffles cards, sets initial display when the app is loaded,
- * clears all intervals and timeouts, adds click handlers to cards and gets
- * localStorage
+ * clears all intervals and timeouts, and gets localStorage
  */
-function init() {
+function init () {
   shuffle(icons);
 
   $moves.text('Moves: 00');
@@ -65,7 +65,6 @@ function init() {
   clearInterval(startCounting);
   clearTimeout(showModal);
 
-  addClickToCards();
   gameHistory = JSON.parse(localStorage.getItem('record')) || {};
 }
 
@@ -74,7 +73,7 @@ function init() {
  * assignCards
  * @param {array} icons
  */
-function shuffle(icons) {
+function shuffle (icons) {
   let m = icons.length, t, i;
 
   // While there remain elements to shuffle…
@@ -86,69 +85,75 @@ function shuffle(icons) {
     icons[m] = icons[i];
     icons[i] = t;
   }
-  assignCards();
-  return icons;
+  assignCards(icons);
 }
 
 /**
  * @description Assigns icons randomly to the DOM
+ * @param {object} icons the array of shuffled cards
  */
-function assignCards() {
+function assignCards (icons) {
   $cardsIcons.each(function (index) {
     $(this).addClass(icons[index]);
   });
 }
 
 /**
- * @description Adds event listeners to cards to flip each one on click,
- * calls checkIfMatch and starts timer
+ * @description Adds event listeners and calls clickHandler
  */
-function addClickToCards() {
-  $cards.each(function (index, card) {
-    $(this).click(function (event) {
-      event.preventDefault();
-      let id = index;
-      let cardIcon = icons[index];
+$cards.on('click', clickHandler);
 
-      game.count += 1;
-      game.clicks += 1;
-      game.clicks === 1 && startTimer();
-      game.clicks && countStars();
-      $(this).addClass('flip-card');
+/**
+ * @description Flips each card on click, calls checkIfMatch and starts timer
+ * @param {object} event the jQuery event object
+ */
+function clickHandler (event) {
+  event.preventDefault();
+  let id = $(this).data('key');
+  let cardIcon = icons[id];
 
-      game.pairToCheck.cardId.push(id);
-      game.pairToCheck.iconName.push(cardIcon);
+  game.count += 1;
+  game.clicks += 1;
+  if (game.count > 2) {
+    return false;
+  }
 
-      game.count === 2 && checkIfMatch();
-    });
-  });
+  game.clicks === 1 && startTimer();
+  $(this).addClass('flip-card').off('click');
+
+  game.pairToCheck.cardId.push(id);
+  game.pairToCheck.iconName.push(cardIcon);
+
+  game.count === 2 && checkIfMatch();
 }
 
 /**
- * @description Checks for a match in the icon classes, resets the counter and
- * the pairToCheck array and calls thereIsAMatch and notAMatch functions
+ * @description Checks for a match in the icon classes, resets the pairToCheck
+ * array, disables clicks and calls matchedPair and noMatch functions
  */
-function checkIfMatch() {
+function checkIfMatch () {
   let match = game.pairToCheck &&
     (game.pairToCheck.iconName[0] === game.pairToCheck.iconName[1])
   let differentCard = game.pairToCheck &&
     (game.pairToCheck.cardId[0] !== game.pairToCheck.cardId[1]);
 
-  match && differentCard ? thereIsAMatch(match) : notAMatch(match);
+  $cards.off('click');
+  match && differentCard ? matchedPair(match) : noMatch(match);
   movesCounter(differentCard);
-  game.count = 0;
   game.pairToCheck = { iconName: [], cardId: [] };
 }
 
 /**
- * @description Increments count by one when two cards have been clicked
+ * @description Increments moves by one when two cards have been clicked
+ * @param {boolean} differentCard
  */
-function movesCounter(differentCard) {
+function movesCounter (differentCard) {
   let numOfMoves = differentCard ? game.moves += 1 : game.moves;
   let movesText = (numOfMoves < 10)
     ? `Moves: 0${numOfMoves}`
     : `Moves: ${numOfMoves}`;
 
+  game.moves && countStars();
   $moves.text(movesText);
   calculateWinner();
 }
@@ -157,24 +162,14 @@ function movesCounter(differentCard) {
  * @description Applies effects to matched pair of cards
  * @param {boolean} match
  */
-function thereIsAMatch(match) {
+function matchedPair (match) {
   let cardOne = $cards[game.pairToCheck.cardId[0]];
   let cardTwo = $cards[game.pairToCheck.cardId[1]];
   let cardIdOne = game.pairToCheck.cardId[0];
   let cardIdTwo = game.pairToCheck.cardId[1];
 
-  handleMatchEffects([cardOne, cardTwo], 'green');
-  disableClick(cardIdOne, cardIdTwo);
-
   game.matchedCards.push(cardIdOne, cardIdTwo);
-}
-
-/**
- * @description Cancels the click event if the cards are a match
- */
-function disableClick(cardIdOne, cardIdTwo) {
-  $($cards[cardIdOne]).off('click');
-  $($cards[cardIdTwo]).off('click');
+  handleMatchEffects([cardOne, cardTwo], 'green');
 }
 
 /**
@@ -182,19 +177,23 @@ function disableClick(cardIdOne, cardIdTwo) {
  * @param {object} cards
  * @param {string} color
  */
-function handleMatchEffects(cards, color) {
+function handleMatchEffects (cards, color) {
   $(cards).each(function () {
     $(this).children('.back')
       .addClass(color, 1000)
-      .effect('bounce', { times: 3 }, 500);
+      .effect('bounce', { times: 3 }, 500, function () {
+        game.count = 0;
+      });
   });
+
+  toggleClick();
 }
 
 /**
  * @description Applies effects to pair of cards that doesn't match
  * @param {boolean} match
  */
-function notAMatch(match) {
+function noMatch (match) {
   let cardOne = $cards[game.pairToCheck.cardId[0]];
   let cardTwo = $cards[game.pairToCheck.cardId[1]];
 
@@ -203,18 +202,36 @@ function notAMatch(match) {
 
 /**
  * @description Applies color red and shake effects when cards are different,
- * after flip cards and remove red color.
+ * flips cards and removes red color.
  * @param {object} cards
  * @param {string} color
  */
-function handleNoMatchEffect(cards, color) {
+function handleNoMatchEffect (cards, color) {
   $(cards).each(function () {
     $(this).children('.back')
       .addClass('red', 1000)
       .effect('shake', 500, function () {
         $(this).removeClass('flip-card');
         $(this).children('.back').removeClass('red', 500);
+        game.count = 0;
       }.bind(this));
+  });
+
+  toggleClick();
+}
+
+/**
+ * @description Disables and enables again clicks on cards
+ */
+function toggleClick () {
+  $cards.each(function () {
+    let cardKey = $(this).data('key');
+
+    if (game.matchedCards.indexOf(cardKey) === -1) {
+      $(this).on('click', clickHandler);
+    } else {
+      $(this).off('click', clickHandler);
+    }
   });
 }
 
@@ -222,14 +239,14 @@ function handleNoMatchEffect(cards, color) {
  * @description Starts timer when the user clicks the first card and
  * ends when all the cards have been matched.
  */
-function gameDuration() {
+function gameDuration () {
   let gameTimer = game.timer += 1;
   let seconds = (gameTimer >= 60) ? (gameTimer % 60) : gameTimer;
   let minutes = Math.floor(gameTimer / 60);
   let displayTime;
 
   game.displaySeconds = seconds < 10 ? '0' + seconds : seconds;
-  game.displayMinutes = minutes < 10 ? ('0' + minutes) : minutes
+  game.displayMinutes = minutes < 10 ? '0' + minutes : minutes
   displayTime = `Timer: ${game.displayMinutes}:${game.displaySeconds}`;
 
   $timer.text(displayTime);
@@ -238,30 +255,27 @@ function gameDuration() {
 /**
  * @description Starts time count
  */
-function startTimer() {
+function startTimer () {
   startCounting = setInterval(gameDuration, 1000);
 }
 
 /**
- * @description Counts stars depending on number of clicks
+ * @description Counts stars depending on the number of moves
  */
-function countStars() {
-  game.clicks === 16
+function countStars () {
+  game.moves === 10
     ? $($stars[2]).css('color', '#ecf0f1') && (game.stars -= 1)
     : $stars[2];
-  game.clicks === 32
+  game.moves === 20
     ? $($stars[1]).css('color', '#ecf0f1') && (game.stars -= 1)
     : $stars[1];
-  game.clicks === 40
-    ? $($stars[0]).css('color', '#ecf0f1') && (game.stars -= 1)
-    : $stars[0];
 }
 
 /**
  * @description Checks for 16 ids in matchedCards array if true, show modal
  * and calls setGameHistory to set game's record on localStorage
  */
-function calculateWinner() {
+function calculateWinner () {
   let movesScore = `Moves: ${game.moves}`;
   let starsScore = (game.stars === 1)
     ? `Star: ${game.stars}`
@@ -278,7 +292,7 @@ function calculateWinner() {
   setGameHistory(record);
 }
 
-function setGameHistory(record) {
+function setGameHistory (record) {
   localStorage.setItem('record', JSON.stringify(record));
 }
 
@@ -286,9 +300,14 @@ function setGameHistory(record) {
  * @description Shows modal when all cards are matched and the last game record
  * if there's any
  */
-function modalShow() {
+function modalShow () {
   clearInterval(startCounting);
-  let lastGame = `Last time you played: ${gameHistory.lastGame}`
+
+  let timeScore = gameHistory.lastGame[0];
+  let movesScore = gameHistory.lastGame[1];
+  let starsScore = gameHistory.lastGame[2];
+  let lastGameResults = timeScore.concat(', ', movesScore, ', ', starsScore);
+  let lastGame = `Last time you played: ${lastGameResults}`
 
   showModal = setTimeout(function () {
     gameHistory.lastGame && $('#gameHistory').text(lastGame);
@@ -299,7 +318,7 @@ function modalShow() {
 /**
  * @description Resets all values
  */
-$resetGame.click(function () {
+$resetGame.on('click', function () {
   game = getInitialGameState();
 
   /* Removes all classes assigned during the game */
@@ -309,6 +328,11 @@ $resetGame.click(function () {
 
   $cardsIcons.each(function (index) {
     $(this).removeClass(icons[index]);
+  });
+
+  $cards.each(function () {
+    $(this).off('click', clickHandler);
+    $(this).on('click', clickHandler);
   });
 
   init();
